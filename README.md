@@ -34,20 +34,62 @@ docker-compose up -d --build
 
 ### Основные endpoint'ы:
 
-Категории 
+#### Категории 
 
-+ GET /categories/ - список категорий
+**Получение списка категорий**
+``` bash
+GET /categories/
+```
+Ответ:
+```json
+[
+    {"name":"Электроника","id":1},
+    ...
+]
+```
 
-+ POST /categories/ - создать категорию
-    ```bash
-    curl -X POST "http://localhost:8000/categories/" \
-    -H "Content-Type: application/json" \
-    -d '{"name": "Тестовая категория"}'
-    ```
+**Создание категории**  
+```bash
+POST /categories/
 
-+ GET /categories/{id} - получить категорию по ID
+"Content-Type: application/json"
+```
+Тело Запроса:
+```json
+{
+    "name" : "string"
+}
+```
 
-Товары 
+Пример:
+```bash
+curl -X POST "http://localhost:8000/categories/" \
+-H "Content-Type: application/json" \
+-d '{"name": "Тестовая категория"}'
+```
+
+Ответ:
+```json
+{
+    "name": "Тестовая категория",
+    "id": 1
+}
+```
+
+**получить категорию по ID**
+
+```bash
+GET /categories/{id}
+```
+Ответ:
+```json
+{
+    "name": "Тестовая категория",
+    "id": 1
+}
+```
+
+#### Товары 
 
 + GET /products/ - список товаров
 
@@ -67,7 +109,7 @@ docker-compose up -d --build
 
 + GET /categories/{id}/products/ - товары по категории
 
-Заказы
+#### Заказы
 + GET /orders/ - список заказов
 
 + POST /orders/ - создать заказ
