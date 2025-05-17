@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
+import os
 from app.models import Base
 from app.database import engine, SessionLocal
 from app.schemas import (
@@ -19,6 +20,13 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        app, 
+        host=os.getenv("SERVER_IP", "0.0.0.0"),  # Берем IP из .env или 0.0.0.0 по умолчанию
+        port=int(os.getenv("SERVER_PORT", 8000))
+    )
 
 # Dependency
 def get_db():

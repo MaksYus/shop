@@ -4,7 +4,10 @@ services:
   web:
     build: .
     ports:
-      - "8000:8000"
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    environment:
+      - SERVER_IP=${SERVER_IP}
+      - SERVER_PORT=${SERVER_PORT}
     env_file:
       - .env
     depends_on:
@@ -12,7 +15,7 @@ services:
       - migrations
     volumes:
       - .:/app
-    command: bash -c "uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    command: uvicorn app.main:app --host ${SERVER_IP} --port ${SERVER_PORT}
 
   db:
     image: postgres:13
