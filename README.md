@@ -2,7 +2,7 @@
 ## Установка и запуск
 ### клонирование репозитория
 ```bash
-git clone <ваш-репозиторий>
+git clone git@github.com:MaksYus/shop.git
 cd shop_project
 ```
 ### Настройка переменных окружения
