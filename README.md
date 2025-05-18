@@ -23,14 +23,14 @@ SERVER_PORT=8000
 ```bash
 docker-compose up -d --build
 ```
-после запуска приложение будет доступно по http://localhost:8001
+после запуска приложение будет доступно по http://&{SERVER_IP}:&{SERVER_PORT}
 
 ## API эндпоинты
 ### Документация API доступна после запуска:
 
-+ Swagger UI: http://localhost:8000/docs
++ Swagger UI: http://&{SERVER_IP}:&{SERVER_PORT}/docs
 
-+ ReDoc: http://localhost:8000/redoc
++ ReDoc: http://&{SERVER_IP}:&{SERVER_PORT}/redoc
 
 ### Основные endpoint'ы:
 
@@ -145,3 +145,15 @@ docker-compose exec web alembic upgrade head
 ```bash
 docker-compose exec web alembic downgrade -1
 ```
+
+
+## Тестирование:
+
+АТ располагается в ./tests . Для запуска тестирования нужно переименовать .env в .env.dev и
+.env.test в .env (после завершения тестирования вернуть обратон)
+
+Поднять приложение используя следующие команды:
+```bash
+docker-compose build --no-cache && docker-compose up -d
+```
+После того, как приложение подниматся, можно проводить тестирование.
