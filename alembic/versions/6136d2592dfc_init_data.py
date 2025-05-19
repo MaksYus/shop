@@ -19,6 +19,54 @@ depends_on = None
 
 
 def upgrade():
+
+     # Создаем таблицу categories
+    op.create_table(
+        'categories',
+        sa.Column('id', sa.Integer, primary_key=True, autoincrement=True),
+        sa.Column('name', sa.String(255), nullable=False, unique=True),
+        sa.Column('created_at', sa.DateTime, server_default=sa.func.now()),
+        sa.Column('updated_at', sa.DateTime, onupdate=sa.func.now())
+    )
+
+    # Создаем таблицу products
+    op.create_table(
+        'products',
+        sa.Column('id', sa.Integer, primary_key=True, autoincrement=True),
+        sa.Column('name', sa.String(255), nullable=False),
+        sa.Column('description', sa.Text),
+        sa.Column('price', sa.Numeric(10, 2), nullable=False),
+        sa.Column('category_id', sa.Integer, sa.ForeignKey('categories.id')),
+        sa.Column('created_at', sa.DateTime, server_default=sa.func.now()),
+        sa.Column('updated_at', sa.DateTime, onupdate=sa.func.now())
+    )
+
+    # Создаем таблицу orders
+    op.create_table(
+        'orders',
+        sa.Column('id', sa.Integer, primary_key=True, autoincrement=True),
+        sa.Column('customer_name', sa.String(100), nullable=False),
+        sa.Column('customer_email', sa.String(100)),
+        sa.Column('total_amount', sa.Numeric(10, 2), nullable=False),
+        sa.Column('created_at', sa.DateTime, server_default=sa.func.now())
+    )
+
+    # Создаем таблицу order_items
+    op.create_table(
+        'order_items',
+        sa.Column('id', sa.Integer, primary_key=True, autoincrement=True),
+        sa.Column('order_id', sa.Integer, sa.ForeignKey('orders.id')),
+        sa.Column('product_id', sa.Integer, sa.ForeignKey('products.id')),
+        sa.Column('quantity', sa.Integer, nullable=False),
+        sa.Column('price', sa.Numeric(10, 2), nullable=False)
+    )
+
+    # Создаем индексы
+    op.create_index(op.f('ix_products_category_id'), 'products', ['category_id'])
+    op.create_index(op.f('ix_order_items_order_id'), 'order_items', ['order_id'])
+    op.create_index(op.f('ix_order_items_product_id'), 'order_items', ['product_id'])
+
+
     # Сначала создаем объект таблицы для категорий
     category_table = table(
         'categories',
@@ -74,3 +122,7 @@ def downgrade():
     # Удаляем добавленные данные
     op.execute("DELETE FROM products WHERE name IN ('Смартфон', 'Ноутбук', 'Футболка')")
     op.execute("DELETE FROM categories WHERE name IN ('Электроника', 'Одежда', 'Книги')")
+    op.drop_table('order_items')
+    op.drop_table('orders')
+    op.drop_table('products')
+    op.drop_table('categories')
